@@ -81,47 +81,42 @@ html, body {
   }
 
   .planting {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    min-height: calc(100vh - 40px);
-    color: #222;
-    box-shadow: 0 -1px 2px black;
-    padding-top: 40px;
+    @include slide(calc(100vh - 40px));
     background: #fff8e1;
-  }
+    color: #222;
+    padding-top: 40px;
 
-  .planting p {
-    text-align: center;
-    font-size: 3vmin;
-    padding: 20px;
-    box-sizing: border-box;
-    width: 80%;
-    margin: 0 auto;
-  }
+    p {
+      text-align: center;
+      font-size: 3vmin;
+      padding: 20px;
+      box-sizing: border-box;
+      width: 80%;
+      margin: 0 auto;
+    }
 
-  .planting canvas {
-    margin: 0 auto;
+    .canvas {
+      margin: 0 auto;
+    }
   }
 
   .safari {
-    min-height: calc(100vh - 40px);
-    color: white;
-    box-shadow: 0 -1px 2px black;
-    padding-top: 40px;
+    @include slide(calc(100vh - 40px));
     background: #1b753d;
-  }
+    color: white;
+    padding-top: 40px;
 
-  .safari .safari-title {
-    text-align: center;
-  }
+    .safari-title {
+      text-align: center;
+    }
 
-  .safari .pics {
-    display: flex;
-    justify-content: center;
-  }
+    .pics {
+      display: flex;
+      justify-content: center;
 
-  .safari .pics img {
-    border: 2px solid black;
+      img {
+        border: 2px solid black;
+      }
+    }
   }
 }
