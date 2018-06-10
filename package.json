@@ -1,0 +1,24 @@
+{
+  "name": "tara-family-farm",
+  "version": "1.0.0",
+  "description": "Website for Tara’s Nepali Family farm.",
+  "private": true,
+  "scripts": {
+    "start": "npm run build && node server.js",
+    "build": "mkdir -p dist/public && for i in src/*.scss ; do CSS=`echo $i | sed 's/src\\\///'` ; sass $i:dist/public/$CSS.css ; done && cp -r src/images src/*.js src/*.html dist/public ; cp  server.js dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davd33/tara-family-farm.git"
+  },
+  "author": "David Rueda",
+  "bugs": {
+    "url": "https://github.com/davd33/tara-family-farm/issues"
+  },
+  "homepage": "https://github.com/davd33/tara-family-farm#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "jquery": "^3.3.1",
+    "path": "^0.12.7"
+  }
+}

@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tara's Nepali Family Organic Farm</title>
+
+    <link rel="stylesheet" href="styles.scss.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Cutive+Mono|Jura|Marck+Script|Permanent+Marker|Rammetto+One"
+          rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div class="intro">
+
+        <div>
+            <h1>Organic Farm in Nepal</h1>
+            <h3>We want to go for a sustainable future for our children and theirs.</h3>
+        </div>
+
+        <div class="video">
+            <canvas width="560" height="315"></canvas>
+            <span>Loading video...</span>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/ft3hQfOnWFk?rel=0" frameborder="0"
+                    allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+
+    </div>
+    <div class="permaculture">
+
+        <p>
+            <strong>Our objective:</strong>
+            We think that the world needs to grow as our plants grow: naturally. It has become clear for us that the
+            only way we can guarantee a future to our children is to use a sustainable agriculture as well as give an
+            appropriate education so that they will be able to reproduce what we've learned from mother nature.
+        </p>
+
+    </div>
+    <div class="safari">
+
+        <div class="safari-title"><h2>What you can see in the park:</h2></div>
+        <div class="pics">
+            <img src="images/safari/rhino.jpg" alt="rhino">
+        </div>
+
+    </div>
+    <div class="planting">
+
+        <p>
+            We got all the following plants in our farms.
+            Have a look to know when we plant and harvest them!
+        </p>
+        <canvas width="560" height="315"></canvas>
+
+    </div>
+</div>
+
+<script src="jquery.min.js"></script>
+<script src="p5.min.js"></script>
+<script>
+  function getContext(selector) {
+
+    const canvas = $(selector)[0];
+
+    return {
+      canvas: canvas,
+      context: canvas.getContext('2d')
+    }
+  }
+
+  function animateYoutubeLoadingCanvas() {
+    let cObj = getContext('.container .intro .video canvas')
+    let c = cObj.context
+    let canvas = cObj.canvas
+
+    function Particle(x, y, velocity) {
+      this.velocity = velocity
+      this.radians = Math.random() * Math.PI * 2
+      this.x = this.x_ori = x
+      this.y = this.y_ori = y
+      this.distance = (Math.random() + 1) * 10
+    }
+
+    Particle.prototype.update = function () {
+      this.radians += this.velocity
+      this.x = this.x_ori + Math.cos(this.radians) * this.distance
+      this.y = this.y_ori + Math.sin(this.radians) * this.distance
+
+      c.beginPath()
+      c.fillStyle = 'white'
+      c.fillRect(this.x, this.y, 2, 2)
+      c.closePath()
+    }
+
+    let particles = []
+    for (let i = 0; i < 10; i++) {
+      particles.push(new Particle(canvas.width / 2, canvas.height / 2, Math.random() * (.1 - .05) + .05))
+    }
+
+    function draw() {
+      requestAnimationFrame(draw)
+
+      c.fillStyle = 'rgba(0,0,0,.1)'
+      c.fillRect(0, 0, canvas.width, canvas.height)
+
+      particles.forEach(function (particle) {
+        particle.update()
+      })
+    }
+
+    draw()
+  }
+
+  function animateCropsChartCanvas() {
+    let cObj = getContext('.container .planting canvas')
+    let c = cObj.context
+    let canvas = cObj.canvas
+
+    let mouse = {}
+    canvas.addEventListener('click', function (mouseEvent) {
+      console.log(mouseEvent)
+      //TODO
+      mouse = {
+        x: mouseEvent.x,
+        y: mouseEvent.y
+      }
+    })
+
+    const CHART_HEIGHT_PADDING = .10
+    const CHART_WIDTH_PADDING = .05
+    const CHART_WIDTH = canvas.width - 2 * CHART_WIDTH_PADDING * canvas.width
+    const CHART_HEIGHT = canvas.height - 2 * CHART_HEIGHT_PADDING * canvas.height
+    const CHART_ORIGIN = {
+      x: canvas.width * CHART_WIDTH_PADDING,
+      y: canvas.height - canvas.height * CHART_HEIGHT_PADDING
+    }
+    const CHART_X_AXIS = {
+      x: canvas.width - canvas.width * CHART_WIDTH_PADDING,
+      y: canvas.height - canvas.height * CHART_HEIGHT_PADDING
+    }
+    const CHART_Y_AXIS = {x: canvas.width * CHART_WIDTH_PADDING, y: canvas.height * CHART_HEIGHT_PADDING}
+
+    function Rect(x, y, w, h) {
+      this.x = x
+      this.y = y
+      this.w = w
+      this.h = h
+    }
+
+    function Chart(data) {
+      this.data = data
+      this.dataRects = []
+    }
+
+    Chart.prototype.update = function () {
+      this.drawXAxis()
+      this.drawYAxis()
+      this.drawMonths()
+      this.drawData()
+    }
+
+    Chart.prototype.drawXAxis = function () {
+      c.beginPath()
+      c.moveTo(CHART_ORIGIN.x, CHART_ORIGIN.y)
+      c.lineTo(CHART_X_AXIS.x, CHART_X_AXIS.y)
+      c.strokeStyle = "#222"
+      c.stroke()
+      c.closePath()
+    }
+
+    Chart.prototype.drawYAxis = function () {
+      c.beginPath()
+      c.moveTo(CHART_ORIGIN.x, CHART_ORIGIN.y)
+      c.lineTo(CHART_Y_AXIS.x, CHART_Y_AXIS.y)
+      c.strokeStyle = "#222"
+      c.stroke()
+      c.closePath()
+    }
+
+    Chart.prototype.drawMonths = function () {
+      let evenMonth = true, N = 12
+      for (let i = 0; i < N; i++, evenMonth = !evenMonth) {
+        c.beginPath()
+        c.fillStyle = evenMonth ? '#f1ead7' : '#fff8e1'
+        c.fillRect(
+          canvas.width * CHART_WIDTH_PADDING + CHART_WIDTH * i / N,
+          canvas.height * CHART_HEIGHT_PADDING,
+          CHART_WIDTH / N,
+          CHART_HEIGHT)
+        c.closePath()
+      }
+    }
+
+    Chart.prototype.drawData = function () {
+      let dataLength = this.data.length
+      for (let i = 0; i < dataLength; i++) {
+        let plantData = this.data[i]
+
+        const YEAR_PERIOD = 365 * 24 * 3600 * 1000
+        let cropPeriod = plantData.end.getTime() - plantData.start.getTime()
+        let cropFromYearStartPeriod = plantData.start.getTime() - new Date(plantData.start.getFullYear(), 1).getTime()
+
+        c.beginPath()
+        c.fillStyle = '#79f193'
+        let rect = new Rect(
+          canvas.width * CHART_WIDTH_PADDING + cropFromYearStartPeriod * CHART_WIDTH / YEAR_PERIOD, // start planting
+          canvas.height * CHART_HEIGHT_PADDING + CHART_HEIGHT * i / dataLength,
+          cropPeriod * CHART_WIDTH / YEAR_PERIOD, // end harvesting
+          CHART_HEIGHT / dataLength)
+        if (this.dataRects.find(function (r) {return r.id === i}) === undefined) {
+          this.dataRects.push({
+            id: i,
+            rect: rect
+          })
+        }
+        c.fillRect(rect.x, rect.y, rect.w, rect.h)
+        c.closePath()
+      }
+    }
+
+    let chart = new Chart([
+      {name: 'Winter', start: new Date(2018, 1), end: new Date(2018, 3, 15)},
+      {name: 'Summer', start: new Date(2018, 4), end: new Date(2018, 8)},
+      {name: 'Corn', start: new Date(2018, 4), end: new Date(2018, 6, 14)},
+      {name: 'Rice', start: new Date(2018, 6, 15), end: new Date(2018, 11)}
+    ])
+
+    function draw() {
+      requestAnimationFrame(draw)
+      c.clearRect(0, 0, canvas.width, canvas.height)
+      chart.update()
+    }
+
+    draw()
+  }
+
+  $(document).ready(function () {
+    animateYoutubeLoadingCanvas()
+    animateCropsChartCanvas()
+  })
+</script>
+</body>
+</html>
