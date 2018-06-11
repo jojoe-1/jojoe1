@@ -95,8 +95,69 @@ html, body {
       margin: 0 auto;
     }
 
-    .canvas {
-      margin: 0 auto;
+    .planting-canvas {
+      position: relative;
+    }
+
+    @keyframes vanish {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0);
+      }
+    }
+
+    @keyframes appear {
+      0% {
+        opacity: 0;
+        transform: scale(0);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .details-card {
+      animation: appear .2s ease-in-out forwards;
+      background: #f4edd7;
+
+      .close {
+        background: #b8b2a1;
+        border-radius: 10px;
+
+        .hide {
+          animation: vanish .2s ease-in-out forwards;
+          transform-origin: center center;
+        }
+      }
+    }
+
+    .hide {
+      animation: vanish .2s ease-in-out forwards;
+      transform-origin: center center;
+    }
+
+    .show {
+      animation: appear .2s ease-in-out forwards;
+    }
+
+    .label {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      color: white;
+      text-shadow: 0 1px 1px black;
+      cursor: pointer;
+      transition: background .2s ease-in-out;
+
+      &:hover {
+        background: rgba(0,0,0,.2)
+      }
     }
   }
 

@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "npm run build && node server.js",
-    "build": "mkdir -p dist/public && for i in src/*.scss ; do CSS=`echo $i | sed 's/src\\\///'` ; sass $i:dist/public/$CSS.css ; done && cp -r src/images src/*.html src/scripts dist/public ; cp  server.js dist"
+    "build": "rm -rf dist && mkdir -p dist/public && for i in src/*.scss ; do CSS=`echo $i | sed 's/src\\\///'` ; sass $i:dist/public/$CSS.css ; done && cp -r src/images src/*.html src/scripts dist/public && cp  server.js dist"
   },
   "repository": {
     "type": "git",

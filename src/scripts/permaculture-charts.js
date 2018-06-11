@@ -1,8 +1,21 @@
 function sketch(p) {
 
+  const SELECTOR = '.container .planting .planting-canvas'
+
   p.setup = function () {
-    let canvas = p.createCanvas(560, 315)
-    canvas.parent($('.container .planting .planting-canvas')[0])
+
+    p.CANVAS_WIDTH = 560
+    p.CANVAS_HEIGHT = 315
+
+    let canvas = p.createCanvas(p.CANVAS_WIDTH, p.CANVAS_HEIGHT)
+    canvas.parent($(SELECTOR)[0])
+
+    p.CHART_DATA = [
+      {name: 'Winter', start: new Date(2018, 1), end: new Date(2018, 3, 15)},
+      {name: 'Summer', start: new Date(2018, 4), end: new Date(2018, 8)},
+      {name: 'Corn', start: new Date(2018, 4), end: new Date(2018, 6, 14)},
+      {name: 'Rice', start: new Date(2018, 6, 15), end: new Date(2018, 11)}
+    ]
 
     p.CHART_HEIGHT_PADDING = .10
     p.CHART_WIDTH_PADDING = .05
@@ -31,6 +44,7 @@ function sketch(p) {
     function Chart(data) {
       this.data = data
       this.dataRects = []
+      this.labelsAdded = false
     }
 
     Chart.prototype.update = function () {
@@ -80,6 +94,7 @@ function sketch(p) {
         if (this.dataRects.find(function (r) {return r.id === i}) === undefined) {
           this.dataRects.push({
             id: i,
+            name: plantData.name,
             rect: rect
           })
         }
@@ -87,14 +102,54 @@ function sketch(p) {
         p.fill('#79f193')
         p.rect(rect.x, rect.y, rect.w, rect.h)
       }
+
+      this.addLabels()
     }
 
-    p.chart = new Chart([
-      {name: 'Winter', start: new Date(2018, 1), end: new Date(2018, 3, 15)},
-      {name: 'Summer', start: new Date(2018, 4), end: new Date(2018, 8)},
-      {name: 'Corn', start: new Date(2018, 4), end: new Date(2018, 6, 14)},
-      {name: 'Rice', start: new Date(2018, 6, 15), end: new Date(2018, 11)}
-    ])
+    Chart.prototype.addLabels = function () {
+      if (!this.labelsAdded) {
+        for (let i = 0; i < this.dataRects.length; i++) {
+          let r = this.dataRects[i]
+          $(SELECTOR).append('<div class="label" id="chart_planting_' + r.id + '">' + r.name + '</div>')
+          let jqLabel = $(SELECTOR + ' #chart_planting_' + r.id)
+          jqLabel.css({
+            left: r.rect.x + 'px',
+            top: r.rect.y + 'px',
+            width: r.rect.w + 'px',
+            height: r.rect.h + 'px'
+          })
+          jqLabel[0].addEventListener('click', function () {
+            $(SELECTOR)[0].classList.toggle('hide')
+            $(SELECTOR)[0].classList.toggle('show')
+            setTimeout(function () {
+              $(SELECTOR).css({display: 'none'})
+              $(SELECTOR).parent().append(
+                '<div class="details-card" id="chart_planting_card">' +
+                '  <div class="close">Close</div>' +
+                '</div>')
+              let jqCard = $(SELECTOR).parent().find('#chart_planting_card')
+              jqCard.css({
+                width: p.CANVAS_WIDTH,
+                height: p.CANVAS_HEIGHT
+              })
+              let jqClose = $(SELECTOR).parent().find('#chart_planting_card .close')
+              jqClose[0].addEventListener('click', function () {
+                this.classList.toggle('hide')
+                setTimeout(function () {
+                  jqCard.remove()
+                  $(SELECTOR)[0].classList.toggle('hide')
+                  $(SELECTOR)[0].classList.toggle('show')
+                  $(SELECTOR).css({display: 'block'})
+                }, 200)
+              })
+            }, 200)
+          })
+        }
+        this.labelsAdded = true
+      }
+    }
+
+    p.chart = new Chart(p.CHART_DATA)
   }
   p.draw = function () {
     p.chart.update()
