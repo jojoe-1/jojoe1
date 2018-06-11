@@ -1,6 +1,8 @@
 function sketch(p) {
 
   const SELECTOR = '.container .planting .planting-canvas'
+  const SELECTOR_JQ = $(SELECTOR)
+  const SELECTOR_EL = SELECTOR_JQ[0]
 
   p.setup = function () {
 
@@ -11,10 +13,10 @@ function sketch(p) {
     canvas.parent($(SELECTOR)[0])
 
     p.CHART_DATA = [
-      {name: 'Winter', start: new Date(2018, 1), end: new Date(2018, 3, 15)},
-      {name: 'Summer', start: new Date(2018, 4), end: new Date(2018, 8)},
-      {name: 'Corn', start: new Date(2018, 4), end: new Date(2018, 6, 14)},
-      {name: 'Rice', start: new Date(2018, 6, 15), end: new Date(2018, 11)}
+      {name: 'Winter', details: 'On winter we mostly grow vegetables!', start: new Date(2018, 1), end: new Date(2018, 3, 15)},
+      {name: 'Summer', details: 'On Summer, the time has come to grow the roots!', start: new Date(2018, 4), end: new Date(2018, 8)},
+      {name: 'Corn', details: 'The delicious corn takes about two weeks to harvest!', start: new Date(2018, 4), end: new Date(2018, 6, 14)},
+      {name: 'Rice', details: 'We love rice!', start: new Date(2018, 6, 15), end: new Date(2018, 11)}
     ]
 
     p.CHART_HEIGHT_PADDING = .10
@@ -95,6 +97,7 @@ function sketch(p) {
           this.dataRects.push({
             id: i,
             name: plantData.name,
+            details: plantData.details,
             rect: rect
           })
         }
@@ -109,8 +112,9 @@ function sketch(p) {
     Chart.prototype.addLabels = function () {
       if (!this.labelsAdded) {
         for (let i = 0; i < this.dataRects.length; i++) {
+          // Add labels
           let r = this.dataRects[i]
-          $(SELECTOR).append('<div class="label" id="chart_planting_' + r.id + '">' + r.name + '</div>')
+          SELECTOR_JQ.append('<div class="label" id="chart_planting_' + r.id + '">' + r.name + '</div>')
           let jqLabel = $(SELECTOR + ' #chart_planting_' + r.id)
           jqLabel.css({
             left: r.rect.x + 'px',
@@ -118,30 +122,33 @@ function sketch(p) {
             width: r.rect.w + 'px',
             height: r.rect.h + 'px'
           })
+          // When click on Label -> show details card
           jqLabel[0].addEventListener('click', function () {
-            $(SELECTOR)[0].classList.toggle('hide')
-            $(SELECTOR)[0].classList.toggle('show')
+            // show details card
+            SELECTOR_JQ.parent().find('#chart_planting_card .desc').html(r.details)
+            SELECTOR_EL.classList.toggle('hide')
+            SELECTOR_EL.classList.toggle('show')
             setTimeout(function () {
-              $(SELECTOR).css({display: 'none'})
-              $(SELECTOR).parent().append(
-                '<div class="details-card" id="chart_planting_card">' +
-                '  <div class="close">Close</div>' +
-                '</div>')
-              let jqCard = $(SELECTOR).parent().find('#chart_planting_card')
+              SELECTOR_JQ.css({'z-index': '-1'})
+              let jqCard = SELECTOR_JQ.parent().find('#chart_planting_card')
+              jqCard[0].classList.toggle('hide')
+              jqCard[0].classList.toggle('show')
               jqCard.css({
                 width: p.CANVAS_WIDTH,
                 height: p.CANVAS_HEIGHT
               })
-              let jqClose = $(SELECTOR).parent().find('#chart_planting_card .close')
-              jqClose[0].addEventListener('click', function () {
-                this.classList.toggle('hide')
-                setTimeout(function () {
-                  jqCard.remove()
-                  $(SELECTOR)[0].classList.toggle('hide')
-                  $(SELECTOR)[0].classList.toggle('show')
-                  $(SELECTOR).css({display: 'block'})
-                }, 200)
-              })
+              let jqClose = SELECTOR_JQ.parent().find('#chart_planting_card .close')
+              if (!jqClose.onclick) {
+                jqClose[0].onclick = function () {
+                  this.parentElement.classList.toggle('hide')
+                  this.parentElement.classList.toggle('show')
+                  setTimeout(function () {
+                    SELECTOR_EL.classList.toggle('hide')
+                    SELECTOR_EL.classList.toggle('show')
+                    SELECTOR_JQ.css({'z-index': '2'})
+                  }, 200)
+                }
+              }
             }, 200)
           })
         }

@@ -95,10 +95,6 @@ html, body {
       margin: 0 auto;
     }
 
-    .planting-canvas {
-      position: relative;
-    }
-
     @keyframes vanish {
       0% {
         opacity: 1;
@@ -120,43 +116,79 @@ html, body {
       }
     }
 
-    .details-card {
-      animation: appear .2s ease-in-out forwards;
-      background: #f4edd7;
+    .chart {
+      position: relative;
 
-      .close {
-        background: #b8b2a1;
-        border-radius: 10px;
+      .planting-canvas {
+        position: relative;
+      }
 
-        .hide {
-          animation: vanish .2s ease-in-out forwards;
-          transform-origin: center center;
+      .details-card {
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        animation: appear .2s ease-in-out forwards;
+
+        padding: 10%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: start;
+
+        width: 100%;
+        font-size: 1.3em;
+
+        .close {
+          display: inline-block;
+          padding: 5px;
+          margin: 0 auto;
+
+          border: 2px solid #b8b2a1;
+          border-radius: 10px;
+          font-size: 1.5em;
+          transition: all .2s ease-in-out;
+
+          &:hover {
+            background: #b8b2a1;
+            cursor: pointer;
+          }
         }
       }
-    }
 
-    .hide {
-      animation: vanish .2s ease-in-out forwards;
-      transform-origin: center center;
-    }
+      .hide {
+        animation: vanish .2s ease-in-out forwards;
+        transform-origin: center center;
+      }
 
-    .show {
-      animation: appear .2s ease-in-out forwards;
-    }
+      .show {
+        animation: appear .2s ease-in-out forwards;
+      }
 
-    .label {
-      position: absolute;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      .label {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-      color: white;
-      text-shadow: 0 1px 1px black;
-      cursor: pointer;
-      transition: background .2s ease-in-out;
+        color: white;
+        text-shadow: 0 1px 1px black;
+        cursor: pointer;
+        transition: background .2s ease-in-out;
 
-      &:hover {
-        background: rgba(0,0,0,.2)
+        &:hover {
+          animation: bg-blink .6s infinite ease-in-out alternate;
+
+          @keyframes bg-blink {
+            0%, 100% {
+              background: rgba(0,0,0,.1);
+            }
+            50% {
+              background: rgba(0,0,0,.2);
+            }
+          }
+        }
       }
     }
   }
